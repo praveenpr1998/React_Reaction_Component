@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import ALL_CONSTANTS from "../../Saga/Constants/Constants";
 import "./Home.scss";
-import { Spin, Popover, Empty, PageHeader } from "antd";
+import { Spin, Popover, Empty } from "antd";
 import moment from "moment";
 import Fill from "../../resources/images/Fill.jpg";
 import ReactionPopup from "../ReactionPopup/ReactionPopup";

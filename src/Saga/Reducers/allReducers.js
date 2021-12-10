@@ -52,7 +52,7 @@ export function Users(state = initialState, action) {
         message.error(ALL_CONSTANTS.GET_CONTENT_BY_ID_FAILED);
       } else {
         const id = action.params && action.params.id;
-        var contentIndex = -1;
+        let contentIndex = -1;
         if (id) {
           contentIndex = _.findIndex(state.content.payload.data, {
             content_id: id,
@@ -88,7 +88,7 @@ export function Users(state = initialState, action) {
     }
     case ALL_CONSTANTS.UPDATE_REACTION: {
       const { content_id, reaction_id, user_id } = action.params;
-      var contentIndex = -1;
+      let contentIndex = -1;
       if (content_id) {
         contentIndex = _.findIndex(state.content.payload.data, {
           content_id: content_id,
@@ -131,8 +131,8 @@ export function Users(state = initialState, action) {
       };
     }
     case ALL_CONSTANTS.DELETE_REACTION: {
-      const { content_id, reaction_id, user_id } = action.params;
-      var contentIndex = -1;
+      const { content_id, reaction_id } = action.params;
+      let contentIndex = -1;
       if (content_id) {
         contentIndex = _.findIndex(state.content.payload.data, {
           content_id: content_id,

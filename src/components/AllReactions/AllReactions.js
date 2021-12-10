@@ -14,15 +14,15 @@ function AllReactions(props) {
 
   useEffect(() => {
     setActiveTab(hoveredID);
-  }, []);
+  }, [hoveredID,reactions]);
 
   const onTabClick = (item) => {
     setActiveTab(item);
   };
 
-  const totalReactions = useMemo(() => {
-    return _.flatten(_.map(Object.values(reactions), "values"));
-  });
+  const totalReactions = () => {
+    return Object.values(reactions).length ? _.flatten(_.map(Object.values(reactions), "values")) : [];
+  };
 
   return (
     <div className="AllReactions">
@@ -36,14 +36,14 @@ function AllReactions(props) {
           <TabPane
             tab={
               <span>
-                All {"" + ALL_CONSTANTS.DOT_SYMBOL + totalReactions.length}
+                All {"" + ALL_CONSTANTS.DOT_SYMBOL + totalReactions().length}
               </span>
             }
             key="all"
             className="reactions-list"
           >
             <div className="user-details">
-              {totalReactions.map((item, i) => {
+              {totalReactions().map((item, i) => {
                 const {
                   first_name = "",
                   last_name = "",
