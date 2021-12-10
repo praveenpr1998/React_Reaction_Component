@@ -12,27 +12,32 @@ import Header from "../Header/Header";
 import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
 
 function Home(props) {
-
   const { users, content, reactions } = props.users;
+  const { getReactions, getUsers, getContents, getContentById } = props;
   const reactionsMapbyId = reactions.isSuccess
     ? _.groupBy(reactions.payload.data, "id")
     : {};
 
-  const fetchContents = (response) => {
-    if (response.data && response.data.length) {
-      _.map(response.data, (content) => {
-        props.getContentById({ id: content.content_id });
-      });
-    }
-  };
+  const fetchContents = useCallback(
+    (response) => {
+      if (response.data && response.data.length) {
+        _.map(response.data, (content) => {
+          getContentById({ id: content.content_id });
+        });
+      }
+    },
+    [getContentById]
+  );
 
-  const getContents = useCallback(() => props.getContents(fetchContents));
+  const getContentsCallback = useCallback(
+    () => getContents(fetchContents),
+    [getContents, fetchContents]
+  );
 
   useEffect(() => {
-    props.getReactions(getContents);
-    props.getUsers();
-  }, []);
-
+    getReactions(getContentsCallback);
+    getUsers();
+  }, [getReactions, getUsers, getContentsCallback]);
 
   const onReactionClick = (args) => {
     const { content, content_id, reaction_id } = args;
@@ -52,7 +57,6 @@ function Home(props) {
     }
     props.updateReaction(reqObj);
   };
-
 
   const onUserChange = (userID) => {
     props.onUserChange(userID);
