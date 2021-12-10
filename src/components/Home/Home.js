@@ -44,9 +44,10 @@ function Home(props) {
     }
     props.updateReaction(reqObj);
   };
+  
+  const getContents = () => props.getContents(fetchContents);
 
   useEffect(() => {
-    const getContents = () => props.getContents(fetchContents);
     props.getReactions(getContents);
     props.getUsers();
   }, []);
