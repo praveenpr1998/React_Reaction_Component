@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { connect } from "react-redux";
 import ALL_CONSTANTS from "../../Saga/Constants/Constants";
 import "./Home.scss";
@@ -26,6 +26,14 @@ function Home(props) {
     }
   };
 
+  const getContents = useCallback(() => props.getContents(fetchContents));
+
+  useEffect(() => {
+    props.getReactions(getContents);
+    props.getUsers();
+  }, []);
+
+
   const onReactionClick = (args) => {
     const { content, content_id, reaction_id } = args;
     var reqObj = { content_id, reaction_id, user_id: users.activeUserID };
@@ -44,13 +52,7 @@ function Home(props) {
     }
     props.updateReaction(reqObj);
   };
-  
-  const getContents = () => props.getContents(fetchContents);
 
-  useEffect(() => {
-    props.getReactions(getContents);
-    props.getUsers();
-  }, []);
 
   const onUserChange = (userID) => {
     props.onUserChange(userID);
