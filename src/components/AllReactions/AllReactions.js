@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import "./AllReactions.scss";
 import { Tabs } from "antd";
 import ALL_CONSTANTS from "../../Saga/Constants/Constants";
