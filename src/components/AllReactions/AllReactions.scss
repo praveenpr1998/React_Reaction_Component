@@ -1,0 +1,36 @@
+// styles for AllReactions Component
+@import "../../resources/scss/index.scss";
+.AllReactions {
+  .all-reactions-tabs {
+    .reactions-list {
+      height: 280px;
+      overflow-y: scroll;
+
+      .user-details {
+        @include grid-with-gap(1rem);
+        .user {
+          display: grid;
+          grid-template-columns: 8% 80%;
+          img {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
+
+  // for scroll bar
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: white;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #edeef0;
+    &:hover {
+      background: #edeef0;
+    }
+  }
+}

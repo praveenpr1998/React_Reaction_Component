@@ -1,0 +1,110 @@
+html,
+body {
+  margin: 0px;
+  height: 100%;
+  font-family: IBM Plex Sans;
+}
+
+#root {
+  height: 100%;
+}
+
+//All mixins
+
+$sizes: 12;
+
+@mixin margin-classes {
+  @for $i from 1 through $sizes {
+    $margin: $i * 0.25rem;
+    .m#{$i} {
+      margin: $margin;
+    }
+    .ml#{$i} {
+      margin-left: $margin;
+    }
+    .mr#{$i} {
+      margin-right: $margin;
+    }
+    .mt#{$i} {
+      margin-top: $margin;
+    }
+    .mb#{$i} {
+      margin-bottom: $margin;
+    }
+    .mx#{$i} {
+      margin-left: $margin;
+      margin-right: $margin;
+    }
+    .my#{$i} {
+      margin-top: $margin;
+      margin-bottom: $margin;
+    }
+  }
+}
+@include margin-classes;
+
+@mixin padding-classes {
+  @for $i from 1 through $sizes {
+    $padding: $i * 0.25rem;
+    /* padding #{$padding} */
+    .p#{$i} {
+      padding: $padding !important;
+    }
+    .pl#{$i} {
+      padding-left: $padding !important;
+    }
+    .pr#{$i} {
+      padding-right: $padding !important;
+    }
+    .pt#{$i} {
+      padding-top: $padding !important;
+    }
+    .pb#{$i} {
+      padding-bottom: $padding !important;
+    }
+    .px#{$i} {
+      padding-left: $padding !important;
+      padding-right: $padding !important;
+    }
+    .py#{$i} {
+      padding-top: $padding !important;
+      padding-bottom: $padding !important;
+    }
+  }
+}
+@include padding-classes;
+
+@mixin flex-align-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin grid-with-gap($gapValue) {
+  display: grid;
+  gap: $gapValue;
+}
+
+@mixin hide-scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+// @include flex-align-center
+
+// Overwritiing antdesign css
+.ant-popover.reaction-popup.ant-popover-placement-top {
+  .ant-popover-arrow {
+    display: none !important;
+  }
+  .ant-popover-inner-content {
+    padding: 4px 16px !important;
+  }
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: black !important;
+}

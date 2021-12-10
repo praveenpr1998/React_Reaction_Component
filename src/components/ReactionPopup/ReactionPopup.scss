@@ -1,0 +1,14 @@
+// styles for ReactionPopup Component
+@import "../../resources/scss/index.scss";
+
+.reaction-content {
+  grid-template-columns: 1fr 1fr 1fr;
+  @include grid-with-gap(0.5rem);
+  div {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.5);
+    }
+  }
+}

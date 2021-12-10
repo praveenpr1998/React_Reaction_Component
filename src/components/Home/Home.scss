@@ -1,0 +1,116 @@
+// styles for Home Component
+@import "../../resources/scss/index.scss";
+.Home {
+  display: grid;
+  justify-content: center;
+  height: 100%;
+  .content-div {
+    @include flex-align-center;
+    // height: 50vh;
+    // width: 400px;
+    width: 392px;
+    height: 450px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    @include grid-with-gap(1rem);
+    overflow-y: scroll;
+    @include hide-scrollbar;
+    .main-content {
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      @include grid-with-gap(0.5rem);
+      grid-template-columns: 0.1fr 1fr;
+      grid-template-areas: "profile-picture profile-name" "profile-picture content" "profile-picture footer";
+      .profile-picture {
+        grid-area: profile-picture;
+        img {
+          width: 32px;
+          height: 32px;
+          border: 0.5px solid #ffffff;
+          box-sizing: border-box;
+        }
+      }
+      .profile-name {
+        @include flex-align-center;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        font-weight: bold;
+        font-style: normal;
+        line-height: 18px;
+        .name {
+          font-size: 14px;
+          white-space: nowrap;
+          max-width: 70%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .time {
+          font-size: 11px;
+          color: darkgrey;
+        }
+      }
+      .content {
+        img {
+          width: 225px;
+          height: 223px;
+        }
+        span {
+          font-size: 14px;
+          font-weight: 400;
+        }
+      }
+      .footer {
+        @include flex-align-center;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        .reactions-div {
+          @include grid-with-gap(0.5rem);
+          grid-template-columns: 80% 15%;
+          width: 100%;
+          .reactions {
+            @include grid-with-gap(0.5rem);
+            grid-template-columns: 30% 30% 30%;
+          }
+          .reaction {
+            @include flex-align-center;
+            cursor: pointer;
+            padding: 2px 5px;
+            position: relative;
+            //   width: 47px;
+            height: 32px;
+            background: #f4f4f4;
+            border: 1px solid #ffffff;
+            box-sizing: border-box;
+            border-radius: 100px;
+            letter-spacing: 0.32px;
+            font-size: 12px;
+            line-height: 16px;
+            gap: 0.25rem;
+            &.changed {
+              background: #edf5ff;
+              border: 1px solid #0f62fe;
+            }
+          }
+          .addReactionImg {
+            @include flex-align-center;
+            cursor: pointer;
+            padding: 2px 8px;
+            //   width: 32px;
+            height: 32px;
+            background: #edeef0;
+            border: 1px solid #ffffff;
+            box-sizing: border-box;
+            border-radius: 100px;
+            img {
+              width: 14px;
+              height: 15px;
+            }
+          }
+        }
+
+        .spinner {
+          @include flex-align-center;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
