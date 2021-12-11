@@ -136,18 +136,7 @@ export function Users(state = initialState, action) {
       // if failed we can remove the added one using the failed block
       // but this will not work if the user tries to delet the reaction immediately
       // after added...because to delete a reaction we need an id of the reaction content
-      // Below part can be used for this approach
-      // ---->
-      // const reactionDataIndex = _.findIndex(state.content.payload.data[contentIndex].reactions[reaction_id].values,{content_id,reaction_id,user_id});
-      // if(reactionDataIndex > -1) state.content.payload.data[contentIndex].reactions[reaction_id].values[reactionDataIndex] = action.payload.data;
-      //     else if(action.isPending){
-      //          // To set the loading for each contents reactions data fetching time
-      //         if(contentIndex > -1){
-      //             state.content.payload.data[contentIndex].reactions[reaction_id].values.push({content_id,reaction_id,user_id});
-      //             state.content.payload.data[contentIndex].reactions[reaction_id].isChangedID = '';
-      //         }
-      // }
-      // ----->
+      // so proceeded with adding the reaction after success response
 
       return {
         ...state,
