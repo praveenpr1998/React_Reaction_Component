@@ -1,7 +1,6 @@
-import { takeLatest, call, put, takeEvery } from "redux-saga/effects";
+import { takeLatest, call, put, takeEvery, delay } from "redux-saga/effects";
 import ALL_CONSTANTS from "../Constants/Constants";
 import * as RestService from "../../Services/RestService";
-
 
 // Saga Workers
 
@@ -51,8 +50,7 @@ function* getReactionsWorker(params) {
       payload: err,
     });
   } finally {
-
-    // call the Contents fetching part after getting result of the 
+    // call the Contents fetching part after getting result of the
     // reactions as we have logic dependent on the reactions
     // calling it in finally will work only either success or failed part
     params.callback();
@@ -118,6 +116,9 @@ function* getContentsByIdWorker(params) {
 
 function* updateReactionWorker(params) {
   try {
+    // when there are multiple clicks are calls made making adelay so that saga can cancel all the previously called workers
+    // as we are using takeLates instead of takeEvery
+    yield delay(500);
     yield put({
       type: ALL_CONSTANTS.UPDATE_REACTION,
       ...ALL_CONSTANTS.commonInitialState,
@@ -147,6 +148,9 @@ function* updateReactionWorker(params) {
 
 function* deleteReactionWorker(params) {
   try {
+    // when there are multiple clicks are calls made making adelay so that saga can cancel all the previously called workers
+    // as we are using takeLates instead of takeEvery
+    yield delay(500);
     yield put({
       type: ALL_CONSTANTS.DELETE_REACTION,
       ...ALL_CONSTANTS.commonInitialState,
@@ -192,7 +196,6 @@ function* onUserChangeWorker(params) {
   }
 }
 
-
 // Saga Watchers
 export function* getUsers() {
   yield takeLatest(ALL_CONSTANTS.GET_USERS_SAGA, getUsersWorker);
@@ -211,11 +214,11 @@ export function* getContentById() {
 }
 
 export function* updateReaction() {
-  yield takeEvery(ALL_CONSTANTS.UPDATE_REACTION_SAGA, updateReactionWorker);
+  yield takeLatest(ALL_CONSTANTS.UPDATE_REACTION_SAGA, updateReactionWorker);
 }
 
 export function* deleteReaction() {
-  yield takeEvery(ALL_CONSTANTS.DELETE_REACTION_SAGA, deleteReactionWorker);
+  yield takeLatest(ALL_CONSTANTS.DELETE_REACTION_SAGA, deleteReactionWorker);
 }
 
 export function* onUserChange() {

@@ -4,8 +4,8 @@ import ALL_CONSTANTS from "../../Saga/Constants/Constants";
 import "./Home.scss";
 import { Spin, Popover, Empty, message } from "antd";
 import moment from "moment";
-import Fill from "../../resources/images/Fill.jpg";
-import ReactionPopup from "../ReactionPopup/ReactionPopup";
+import images from "../../resources/images/index";
+import ReactionPopOverIcon from "../ReactionPopOverIcon/ReactionPopOverIcon";
 import AllReactions from "../AllReactions/AllReactions";
 import _ from "lodash";
 import Header from "../Header/Header";
@@ -13,7 +13,14 @@ import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
 
 function Home(props) {
   const { users, content, reactions } = props.users;
-  const { getReactions, getUsers, getContents, getContentById } = props;
+  const {
+    getReactions,
+    getUsers,
+    getContents,
+    getContentById,
+    deleteReaction,
+    updateReaction,
+  } = props;
   const reactionsMapbyId = reactions.isSuccess
     ? _.groupBy(reactions.payload.data, "id")
     : {};
@@ -60,29 +67,31 @@ function Home(props) {
     getUsers();
   }, [getReactions, getUsers, getContentsCallback]);
 
-  const onReactionClick = (args) => {
-    // If the clicked contents reactions values has the active userid
-    //(Since a user can add a particular reaction in a content for only once)
-    // --> it is an already added reaction --> call deleteReaction
-    //  if not found call updateReaction
-
-    if (users.activeUserID) {
-      const { content, content_id, reaction_id } = args;
-      var reqObj = { content_id, reaction_id, user_id: users.activeUserID };
-      if (content.reactions[reaction_id]) {
-        const reactionData = _.find(content.reactions[reaction_id].values, {
-          user_id: users.activeUserID,
-        });
-        if (reactionData) {
-          props.deleteReaction(reactionData);
-          return;
+  const onReactionClick = useCallback(
+    (args) => {
+      // If the clicked contents reactions values has the active userid
+      //(Since a user can add a particular reaction in a content for only once)
+      // --> it is an already added reaction --> call deleteReaction
+      //  if not found call updateReaction
+      if (users.activeUserID) {
+        const { content, content_id, reaction_id } = args;
+        var reqObj = { content_id, reaction_id, user_id: users.activeUserID };
+        if (content.reactions[reaction_id]) {
+          const reactionData = _.find(content.reactions[reaction_id].values, {
+            user_id: users.activeUserID,
+          });
+          if (reactionData) {
+            deleteReaction(reactionData);
+            return;
+          }
         }
+        updateReaction(reqObj);
+      } else {
+        message.error(ALL_CONSTANTS.UPDATE_REACTION_FAILED);
       }
-      props.updateReaction(reqObj);
-    } else {
-      message.error(ALL_CONSTANTS.UPDATE_REACTION_FAILED);
-    }
-  };
+    },
+    [users, deleteReaction, updateReaction]
+  );
 
   const onUserChange = (userID) => {
     props.onUserChange(userID);
@@ -122,105 +131,109 @@ function Home(props) {
                         {content.isFetchingReactionsData ? (
                           <Spin className="spinner" />
                         ) : reactions.isSuccess ? (
-                          <div className="reactions-div">
-                            <div className="reactions">
-                              {content.reactions &&
-                              Object.keys(content.reactions).length ? (
-                                <>
-                                  {Object.keys(content.reactions).map(
-                                    (id, i) => {
-                                      if (content.reactions[id].values.length) {
-                                        // check for content's reactions values has the active userid
-                                        // If yes --> add class 'Checked' to show the appropiate UI for selected reaction
-                                        const isChanged = _.findIndex(
-                                          content.reactions[id].values,
-                                          { user_id: users.activeUserID }
-                                        );
-                                        return (
-                                          <Popover
-                                          content={
-                                            <ErrorBoundary>
-                                              <AllReactions
-                                                reactions={
-                                                  content.reactions
+                          <>
+                            <div className="reactions-div">
+                              <div className="reactions">
+                                {content.reactions &&
+                                Object.keys(content.reactions).length ? (
+                                  <>
+                                    {Object.keys(content.reactions).map(
+                                      (id, i) => {
+                                        if (
+                                          content.reactions[id].values.length
+                                        ) {
+                                          // check for content's reactions values has the active userid
+                                          // If yes --> add class 'Checked' to show the appropiate UI for selected reaction
+                                          const isChanged = _.findIndex(
+                                            content.reactions[id].values,
+                                            { user_id: users.activeUserID }
+                                          );
+                                          return (
+                                            <Popover
+                                              content={
+                                                <ErrorBoundary>
+                                                  <AllReactions
+                                                    reactions={
+                                                      content.reactions
+                                                    }
+                                                    hoveredID={id}
+                                                    reactionsMapbyId={
+                                                      reactionsMapbyId
+                                                    }
+                                                    users={users}
+                                                  />
+                                                </ErrorBoundary>
+                                              }
+                                              overlayInnerStyle={{
+                                                width: "auto",
+                                                maxHeight: 386,
+                                              }}
+                                              key={`popover_` + i}
+                                              overlayClassName="reaction"
+                                            >
+                                              <div
+                                                className={`reaction ${
+                                                  isChanged > -1
+                                                    ? "changed"
+                                                    : ""
+                                                }`}
+                                                key={i}
+                                                onClick={() =>
+                                                  onReactionClick({
+                                                    content_id:
+                                                      content.content_id,
+                                                    reaction_id:
+                                                      reactionsMapbyId[id][0]
+                                                        .id,
+                                                    content,
+                                                  })
                                                 }
-                                                hoveredID={id}
-                                                reactionsMapbyId={
-                                                  reactionsMapbyId
-                                                }
-                                                users={users}
-                                              />
-                                            </ErrorBoundary>
-                                          }
-                                          overlayInnerStyle={{
-                                            width: "auto",
-                                            maxHeight: 386,
-                                          }}
-                                          key={`popover_`+i}
-                                          overlayClassName="reaction"
-                                        >
-                                          <div
-                                            className={`reaction ${
-                                              isChanged > -1 ? "changed" : ""
-                                            }`}
-                                            key={i}
-                                            onClick={() =>
-                                              onReactionClick({
-                                                content_id: content.content_id,
-                                                reaction_id:
-                                                  reactionsMapbyId[id][0].id,
-                                                content,
-                                              })
-                                            }
-                                          >   
-                                              {"" +
-                                                reactionsMapbyId[id][0].emoji +' '+
-                                                ALL_CONSTANTS.DOT_SYMBOL +' '+
-                                                content.reactions[id].values
-                                                  .length}
-                                          </div>
-                                          </Popover>
-                                        );
-                                      } else return null;
-                                    }
-                                  )}
-                                </>
-                              ) : null}
-                            </div>
-                            <Popover
-                              content={
-                                <ErrorBoundary>
-                                  <ReactionPopup
-                                    reactions={
-                                      reactions.isSuccess
-                                        ? reactions.payload.data
-                                        : []
-                                    }
-                                    onReactionClick={(reaction_id) =>
-                                      onReactionClick({
-                                        content_id: content.content_id,
-                                        reaction_id: reaction_id,
-                                        content,
-                                      })
-                                    }
-                                  />
-                                </ErrorBoundary>
-                              }
-                              trigger="click"
-                              overlayClassName={`reaction-popup`}
-                              overlayInnerStyle={{
-                                width: "auto",
-                                height: "auto",
-                                borderRadius: 24,
-                                border: "1px solid #E0E0E0",
-                                boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.03)",
-                              }}
-                            >
-                              <div className="addReactionImg">
-                                <img src={Fill} alt="prof" />
+                                              >
+                                                {"" +
+                                                  reactionsMapbyId[id][0]
+                                                    .emoji +
+                                                  " " +
+                                                  ALL_CONSTANTS.DOT_SYMBOL +
+                                                  " " +
+                                                  content.reactions[id].values
+                                                    .length}
+                                              </div>
+                                            </Popover>
+                                          );
+                                        } else return null;
+                                      }
+                                    )}
+                                  </>
+                                ) : null}
                               </div>
-                            </Popover>
-                          </div>
+                              <ReactionPopOverIcon
+                                onReactionClick={(reaction_id) =>
+                                  onReactionClick({
+                                    content_id: content.content_id,
+                                    reaction_id: reaction_id,
+                                    content,
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="context-menu">
+                              <ReactionPopOverIcon
+                                onReactionClick={(reaction_id) =>
+                                  onReactionClick({
+                                    content_id: content.content_id,
+                                    reaction_id: reaction_id,
+                                    content,
+                                  })
+                                }
+                              />
+                              <div>
+                                <img src={images.Reply} alt="2" />
+                              </div>
+                              <div>
+                                <img src={images.Menu} alt="3" />
+                              </div>
+                            </div>
+                          </>
                         ) : null}
                       </div>
                     </ErrorBoundary>

@@ -13,6 +13,7 @@
     overflow-y: scroll;
     @include hide-scrollbar;
     .main-content {
+      position: relative;
       box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
       @include grid-with-gap(0.5rem);
       row-gap: 0.15rem;
@@ -76,7 +77,7 @@
             cursor: pointer;
             position: relative;
             height: 32px;
-            background: $color-dim-grey-1;
+            background: $color-dim-grey-2;
             border: 1px solid $color-white;
             box-sizing: border-box;
             border-radius: 100px;
@@ -97,7 +98,7 @@
             cursor: pointer;
             padding: 2px 8px;
             height: 32px;
-            background: $color-dim-grey-2;
+            background: $color-dim-grey-3;
             border: 1px solid $color-white;
             box-sizing: border-box;
             border-radius: 100px;
@@ -111,6 +112,33 @@
         .spinner {
           @include flex-align-center;
           width: 100%;
+        }
+      }
+
+      .context-menu {
+        display: none;
+      }
+      &:hover {
+        background-color: $color-dim-grey-1;
+        .context-menu {
+          position: absolute;
+          background-color: $color-white;
+          border: 1px solid $color-dim-grey-2;
+          top: 8px;
+          right: 1rem;
+          display: flex;
+          div {
+            @include flex-align-center;
+            width: 32px;
+            height: 32px;
+            &:hover {
+              background-color: $color-dim-grey-1;
+            }
+            img {
+              width: 14px;
+              height: 15px;
+            }
+          }
         }
       }
     }

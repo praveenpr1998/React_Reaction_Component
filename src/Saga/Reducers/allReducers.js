@@ -7,6 +7,7 @@ const initialState = {
   content: ALL_CONSTANTS.commonInitialState,
   fetchById: ALL_CONSTANTS.commonInitialState,
   updateReaction: ALL_CONSTANTS.commonInitialState,
+  deleteReaction: ALL_CONSTANTS.commonInitialState,
 };
 
 export function Users(state = initialState, action) {
@@ -183,7 +184,7 @@ export function Users(state = initialState, action) {
 
       return {
         ...state,
-        updateReaction: { ...state.updateReaction, ...action },
+        deleteReaction: { ...state.deleteReaction, ...action },
       };
     }
     default:
