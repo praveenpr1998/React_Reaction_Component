@@ -74,7 +74,6 @@
           .reaction {
             @include flex-align-center;
             cursor: pointer;
-            padding: 2px 5px;
             position: relative;
             height: 32px;
             background: $color-dim-grey-1;

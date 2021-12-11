@@ -137,6 +137,28 @@ function Home(props) {
                                           { user_id: users.activeUserID }
                                         );
                                         return (
+                                          <Popover
+                                          content={
+                                            <ErrorBoundary>
+                                              <AllReactions
+                                                reactions={
+                                                  content.reactions
+                                                }
+                                                hoveredID={id}
+                                                reactionsMapbyId={
+                                                  reactionsMapbyId
+                                                }
+                                                users={users}
+                                              />
+                                            </ErrorBoundary>
+                                          }
+                                          overlayInnerStyle={{
+                                            width: "auto",
+                                            maxHeight: 386,
+                                          }}
+                                          key={`popover_`+i}
+                                          overlayClassName="reaction"
+                                        >
                                           <div
                                             className={`reaction ${
                                               isChanged > -1 ? "changed" : ""
@@ -150,34 +172,14 @@ function Home(props) {
                                                 content,
                                               })
                                             }
-                                          >
-                                            <Popover
-                                              content={
-                                                <ErrorBoundary>
-                                                  <AllReactions
-                                                    reactions={
-                                                      content.reactions
-                                                    }
-                                                    hoveredID={id}
-                                                    reactionsMapbyId={
-                                                      reactionsMapbyId
-                                                    }
-                                                    users={users}
-                                                  />
-                                                </ErrorBoundary>
-                                              }
-                                              overlayInnerStyle={{
-                                                width: "auto",
-                                                maxHeight: 386,
-                                              }}
-                                            >
+                                          >   
                                               {"" +
-                                                reactionsMapbyId[id][0].emoji +
-                                                ALL_CONSTANTS.DOT_SYMBOL +
+                                                reactionsMapbyId[id][0].emoji +' '+
+                                                ALL_CONSTANTS.DOT_SYMBOL +' '+
                                                 content.reactions[id].values
                                                   .length}
-                                            </Popover>
                                           </div>
+                                          </Popover>
                                         );
                                       } else return null;
                                     }
