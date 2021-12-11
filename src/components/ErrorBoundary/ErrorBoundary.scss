@@ -1,5 +1,6 @@
+@import "../../resources/scss/index.scss";
 #ErrorBoundary {
   .red-text {
-    color: #be4242;
+    color: $color-error-red;
   }
 }

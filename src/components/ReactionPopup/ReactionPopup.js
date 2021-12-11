@@ -17,4 +17,8 @@ function ReactionPopup(props) {
   );
 }
 
+// Since this component is not going to recieve any other props
+// except all reactions we can memoize the component 
+// all reactions will be fetched initially will not be changed
+
 export default React.memo(ReactionPopup);

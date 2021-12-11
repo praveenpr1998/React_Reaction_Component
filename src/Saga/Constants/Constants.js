@@ -6,7 +6,7 @@ const ALL_CONSTANTS = {
 
   GET_REACTIONS_SAGA: "GET_REACTIONS_SAGA",
   GET_REACTIONS: "GET_REACTIONS",
-  GET_REACTIONS_FAILED: "GET_REACTIONS_FAILED",
+  GET_REACTIONS_FAILED: "Something went wrong..",
 
   GET_CONTENTS: "GET_CONTENTS",
   GET_CONTENTS_SAGA: "GET_CONTENTS_SAGA",
@@ -37,5 +37,29 @@ const ALL_CONSTANTS = {
   },
 
   DOT_SYMBOL: "•",
+  BASE_URL: "https://artful-iudex.herokuapp.com",
+  CONTENTS_DATA: {
+    data: [
+      {
+        content_id: 1,
+        userName: "Horward Stark",
+        time: "",
+        contentImageURL:
+          "https://cdn.pixabay.com/photo/2021/07/20/14/59/iron-man-6480952__480.jpg",
+        profilePic:
+          "https://cdn.pixabay.com/photo/2021/07/20/14/59/iron-man-6480952__480.jpg",
+        reactions: {},
+      },
+      {
+        content_id: 2,
+        userName: "Thanos",
+        time: "",
+        contentText: "I am Inevitable",
+        profilePic:
+          "https://img.theweek.in/content/dam/week/news/entertainment/images/2019/4/26/thanos-avengers-infinity.jpg",
+        reactions: {},
+      },
+    ],
+  },
 };
 export default ALL_CONSTANTS;

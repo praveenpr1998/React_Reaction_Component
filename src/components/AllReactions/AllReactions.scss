@@ -1,11 +1,15 @@
 // styles for AllReactions Component
 @import "../../resources/scss/index.scss";
 .AllReactions {
+  font-family: $IBM-font-regular;
+  font-style: normal;
+  .title-text {
+    font-weight: 600;
+  }
   .all-reactions-tabs {
     .reactions-list {
       height: 280px;
       overflow-y: scroll;
-
       .user-details {
         @include grid-with-gap(1rem);
         .user {

@@ -2,6 +2,9 @@ import { takeLatest, call, put, takeEvery } from "redux-saga/effects";
 import ALL_CONSTANTS from "../Constants/Constants";
 import * as RestService from "../../Services/RestService";
 
+
+// Saga Workers
+
 function* getUsersWorker() {
   try {
     yield put({
@@ -48,6 +51,10 @@ function* getReactionsWorker(params) {
       payload: err,
     });
   } finally {
+
+    // call the Contents fetching part after getting result of the 
+    // reactions as we have logic dependent on the reactions
+    // calling it in finally will work only either success or failed part
     params.callback();
   }
 }
@@ -66,6 +73,8 @@ function* getContentsWorker(params) {
       isSuccess: true,
       payload: response,
     });
+
+    // Start fetching the content reactions details after getting the basic contents details
     params.callback(response);
   } catch (err) {
     yield put({
@@ -88,6 +97,8 @@ function* getContentsByIdWorker(params) {
     const response = yield call(() =>
       RestService.getContentById(params.params)
     );
+
+    // params are passed to update the corresponding store
     yield put({
       type: ALL_CONSTANTS.GET_CONTENT_BY_ID,
       ...ALL_CONSTANTS.commonInitialState,
@@ -181,6 +192,8 @@ function* onUserChangeWorker(params) {
   }
 }
 
+
+// Saga Watchers
 export function* getUsers() {
   yield takeLatest(ALL_CONSTANTS.GET_USERS_SAGA, getUsersWorker);
 }

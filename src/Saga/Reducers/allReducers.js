@@ -4,7 +4,7 @@ import _ from "lodash";
 const initialState = {
   users: { ...ALL_CONSTANTS.commonInitialState, activeUserID: "" },
   reactions: ALL_CONSTANTS.commonInitialState,
-  content: { ...ALL_CONSTANTS.commonInitialState, reactions: {} },
+  content: ALL_CONSTANTS.commonInitialState,
   fetchById: ALL_CONSTANTS.commonInitialState,
   updateReaction: ALL_CONSTANTS.commonInitialState,
 };
@@ -19,6 +19,7 @@ export function Users(state = initialState, action) {
         action.payload.data &&
         action.payload.data.length
       ) {
+        // Setting the first user response as the default active user
         state.users = {
           ...state.users,
           activeUserID: action.payload.data[0].id,
@@ -72,6 +73,7 @@ export function Users(state = initialState, action) {
             "id"
           );
 
+          // Set the corresponding content reactions data
           const contentReactionById = _.groupBy(data, "reaction_id");
           _.each(contentReactionById, (value, key) => {
             if (reactionsMapbyId[key])
@@ -95,7 +97,14 @@ export function Users(state = initialState, action) {
         });
       }
       if (action.isFailed) {
-        if (contentIndex > -1) {
+        if (
+          contentIndex > -1 &&
+          state.content.payload.data[contentIndex].reactions[reaction_id]
+        ) {
+          // Reverting the added reaction if the
+          // update reaction call for a content failed
+          // finding the exact using the content,reaction,user id
+          // (since for a content a user can give a particular reaction only once)
           const reactionDataIndex = _.findIndex(
             state.content.payload.data[contentIndex].reactions[reaction_id]
               .values,
@@ -108,13 +117,26 @@ export function Users(state = initialState, action) {
         }
         message.error(ALL_CONSTANTS.UPDATE_REACTION_FAILED);
       } else if (action.isSuccess) {
+        // adding the reaction data to content
         if (action.payload.data.id) {
+          // if there is no values exists for that particualr reaction create an empty array
+          if (!state.content.payload.data[contentIndex].reactions[reaction_id])
+            state.content.payload.data[contentIndex].reactions[reaction_id] = {
+              values: [],
+            };
           state.content.payload.data[contentIndex].reactions[
             reaction_id
-          ].values.push({ ...action.payload.data, isChanged: true });
+          ].values.push({ ...action.payload.data });
         }
       }
 
+      // If we wish to provide a good user experience by adding the reaction
+      // immediately when the user has clicked and making a call behind to add it
+      // if failed we can remove the added one using the failed block
+      // but this will not work if the user tries to delet the reaction immediately
+      // after added...because to delete a reaction we need an id of the reaction content
+      // Below part can be used for this approach
+      // ---->
       // const reactionDataIndex = _.findIndex(state.content.payload.data[contentIndex].reactions[reaction_id].values,{content_id,reaction_id,user_id});
       // if(reactionDataIndex > -1) state.content.payload.data[contentIndex].reactions[reaction_id].values[reactionDataIndex] = action.payload.data;
       //     else if(action.isPending){
@@ -124,6 +146,7 @@ export function Users(state = initialState, action) {
       //             state.content.payload.data[contentIndex].reactions[reaction_id].isChangedID = '';
       //         }
       // }
+      // ----->
 
       return {
         ...state,
@@ -138,6 +161,12 @@ export function Users(state = initialState, action) {
           content_id: content_id,
         });
       }
+
+      // Same as update delete will work in vice versa
+      // Success will remove the content
+      // Failed need not do any logic as we are not updating the content immediately after clicking
+      // we are waiting for the response
+
       if (action.isFailed) {
         message.error(ALL_CONSTANTS.DELETE_REACTION_FAILED);
       } else if (action.isSuccess) {
@@ -151,14 +180,6 @@ export function Users(state = initialState, action) {
             reaction_id
           ].values.splice(reactionDataIndex, 1);
       }
-
-      //     else if(action.isPending){
-      //          // To set the loading for each contents reactions data fetching time
-      //         if(contentIndex > -1){
-      //             state.content.payload.data[contentIndex].reactions[reaction_id].values.push({content_id,reaction_id,user_id});
-      //             state.content.payload.data[contentIndex].reactions[reaction_id].isChangedID = '';
-      //         }
-      // }
 
       return {
         ...state,

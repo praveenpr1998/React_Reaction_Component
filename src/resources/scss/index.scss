@@ -2,11 +2,34 @@ html,
 body {
   margin: 0px;
   height: 100%;
-  font-family: IBM Plex Sans;
+  font-family: 'IBM Plex Sans Medium' !important;
 }
 
 #root {
   height: 100%;
+}
+$IBM-font-regular:'IBM Plex Sans';
+$IBM-font-medium : 'IBM Plex Sans Medium';
+
+//colors
+$color-black : black;
+$color-white : #ffffff;
+$color-darkgrey : darkgrey;
+$color-error-red:#be4242;
+$color-light-blue : #edf5ff;
+$color-dark-blue : #0f62fe;
+$color-dim-grey-1 : #f4f4f4;
+$color-dim-grey-2:#edeef0;
+
+@font-face {
+  font-family: $IBM-font-regular;
+  src: url('../fonts/IBM Plex Sans/IBMPlexSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: $IBM-font-medium;
+  font-size: 14px;
+  src: url('../fonts/IBM Plex Sans/IBMPlexSans-Medium.ttf');
 }
 
 //All mixins
@@ -86,16 +109,17 @@ $sizes: 12;
 }
 
 @mixin hide-scrollbar {
-  /* Hide scrollbar for Chrome, Safari and Opera */
+  /*  Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-// @include flex-align-center
 
-// Overwritiing antdesign css
+
+// Overwritiing antdesign css with specific classes addedd 
+// so that it will not affect all the similar antd components 
 .ant-popover.reaction-popup.ant-popover-placement-top {
   .ant-popover-arrow {
     display: none !important;
@@ -106,5 +130,5 @@ $sizes: 12;
 }
 
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: black !important;
+  color: $color-black !important;
 }

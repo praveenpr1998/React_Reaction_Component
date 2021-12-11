@@ -6,8 +6,6 @@
   height: 100%;
   .content-div {
     @include flex-align-center;
-    // height: 50vh;
-    // width: 400px;
     width: 392px;
     height: 450px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -17,6 +15,7 @@
     .main-content {
       box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
       @include grid-with-gap(0.5rem);
+      row-gap: 0.15rem;
       grid-template-columns: 0.1fr 1fr;
       grid-template-areas: "profile-picture profile-name" "profile-picture content" "profile-picture footer";
       .profile-picture {
@@ -24,11 +23,12 @@
         img {
           width: 32px;
           height: 32px;
-          border: 0.5px solid #ffffff;
+          border: 0.5px solid $color-white;
           box-sizing: border-box;
         }
       }
       .profile-name {
+        grid-area: profile-name;
         @include flex-align-center;
         justify-content: flex-start;
         gap: 0.5rem;
@@ -44,10 +44,11 @@
         }
         .time {
           font-size: 11px;
-          color: darkgrey;
+          color: $color-darkgrey;
         }
       }
       .content {
+        grid-area: content;
         img {
           width: 225px;
           height: 223px;
@@ -58,6 +59,7 @@
         }
       }
       .footer {
+        grid-area: footer;
         @include flex-align-center;
         justify-content: flex-start;
         gap: 0.5rem;
@@ -74,29 +76,30 @@
             cursor: pointer;
             padding: 2px 5px;
             position: relative;
-            //   width: 47px;
             height: 32px;
-            background: #f4f4f4;
-            border: 1px solid #ffffff;
+            background: $color-dim-grey-1;
+            border: 1px solid $color-white;
             box-sizing: border-box;
             border-radius: 100px;
             letter-spacing: 0.32px;
+            font-family: "IBM Plex Sans";
             font-size: 12px;
+            font-style: normal;
+            font-weight: normal;
             line-height: 16px;
             gap: 0.25rem;
             &.changed {
-              background: #edf5ff;
-              border: 1px solid #0f62fe;
+              background: $color-light-blue;
+              border: 1px solid $color-dark-blue;
             }
           }
           .addReactionImg {
             @include flex-align-center;
             cursor: pointer;
             padding: 2px 8px;
-            //   width: 32px;
             height: 32px;
-            background: #edeef0;
-            border: 1px solid #ffffff;
+            background: $color-dim-grey-2;
+            border: 1px solid $color-white;
             box-sizing: border-box;
             border-radius: 100px;
             img {
