@@ -17,27 +17,38 @@ function Home(props) {
   const reactionsMapbyId = reactions.isSuccess
     ? _.groupBy(reactions.payload.data, "id")
     : {};
+  const thresholdCount = 3;
 
+  // useCallback to memoize the function to avoid infinite rerendering
+  // since it is used in dependencies
 
-    // useCallback to memoize the function to avoid infinite rerendering
-    // since it is used in dependencies
-
-
-    // fetchContents --> to fetch the contents reactions details based on the content_id
-    // might use some algorithm like polling with a limit if we
-    // have a large number of contents
-    const fetchContents = useCallback(
-    (response) => {
-      if (response.data && response.data.length) {
-        _.map(response.data, (content) => {
+  //fethContentsPartially --> slice the data with given startIndex and endIndex
+  // after slicing check if there are data present to make a call
+  // if present call the function again with startIndex as endIndex and endIndex as endIndex + thresholdCount( will be the endIndex)
+  const fethContentsPartially = useCallback(
+    (data, startIndex, endIndex) => {
+      var slicedData = data.slice(startIndex, endIndex);
+      if (slicedData.length) {
+        _.map(slicedData, (content) => {
           getContentById({ id: content.content_id });
         });
+        fethContentsPartially(data, endIndex, endIndex + thresholdCount);
       }
     },
     [getContentById]
   );
 
-  // getContentsCallback -- > after executing getReactions calling getContents 
+  // fetchContents --> to fethc contents details partially
+  const fetchContents = useCallback(
+    (response) => {
+      if (response.data && response.data.length) {
+        fethContentsPartially(response.data, 0, 0 + thresholdCount);
+      }
+    },
+    [fethContentsPartially]
+  );
+
+  // getContentsCallback -- > after executing getReactions calling getContents
   // help us to add the reactions for specific contents
   const getContentsCallback = useCallback(
     () => getContents(fetchContents),
@@ -50,7 +61,6 @@ function Home(props) {
   }, [getReactions, getUsers, getContentsCallback]);
 
   const onReactionClick = (args) => {
-
     // If the clicked contents reactions values has the active userid
     //(Since a user can add a particular reaction in a content for only once)
     // --> it is an already added reaction --> call deleteReaction
@@ -80,7 +90,6 @@ function Home(props) {
 
   return (
     <div className="Home">
-
       {/* Contains Header Title and Active Users Selection Component */}
       <ErrorBoundary>
         <Header users={users} onUserChange={onUserChange} />
@@ -170,8 +179,7 @@ function Home(props) {
                                             </Popover>
                                           </div>
                                         );
-                                      }
-                                      else return null;
+                                      } else return null;
                                     }
                                   )}
                                 </>
