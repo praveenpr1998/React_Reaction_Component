@@ -83,8 +83,8 @@ function AllReactions(props) {
                 tab={
                   <span>
                     {reactionsMapbyId[id]
-                      ? reactionsMapbyId[id][0].emoji +
-                        ALL_CONSTANTS.DOT_SYMBOL +
+                      ? reactionsMapbyId[id][0].emoji +" "+
+                        ALL_CONSTANTS.DOT_SYMBOL +" "+
                         reactions[id].values.length
                       : ""}
                   </span>

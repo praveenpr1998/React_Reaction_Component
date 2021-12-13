@@ -8,7 +8,7 @@ function ReactionPopup(props) {
       {props.reactions &&
         props.reactions.map((reaction) => (
           <Tooltip placement="top" title={reaction.name} key={reaction.id}>
-            <div onClick={() => props.onReactionClick(reaction.id)} className="p1">
+            <div onClick={() => props.onReactionClick(reaction.id)} >
               {reaction.emoji}
             </div>
           </Tooltip>

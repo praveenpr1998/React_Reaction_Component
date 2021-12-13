@@ -9,8 +9,9 @@
   div {
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+    padding: 5px;
     &:hover {
-      transform: scale(1.5);
+      transform: scale(2);
     }
   }
 }
