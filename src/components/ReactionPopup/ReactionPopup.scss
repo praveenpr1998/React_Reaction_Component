@@ -2,8 +2,10 @@
 @import "../../resources/scss/index.scss";
 
 .reaction-content {
-  grid-template-columns: 1fr 1fr 1fr;
-  @include grid-with-gap(0.5rem);
+    @include flex-align-center;
+    max-width: 200px;
+    flex-wrap: wrap;
+    justify-content: normal;
   div {
     transition: all 0.2s ease-in-out;
     cursor: pointer;
