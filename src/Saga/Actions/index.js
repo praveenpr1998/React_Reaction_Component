@@ -1,4 +1,4 @@
-import { takeLatest, call, put, takeEvery, delay } from "redux-saga/effects";
+import { takeLatest, call, put, takeEvery } from "redux-saga/effects";
 import ALL_CONSTANTS from "../Constants/Constants";
 import * as RestService from "../../Services/RestService";
 
@@ -116,9 +116,6 @@ function* getContentsByIdWorker(params) {
 
 function* updateReactionWorker(params) {
   try {
-    // when there are multiple clicks are calls made making adelay so that saga can cancel all the previously called workers
-    // as we are using takeLates instead of takeEvery
-    yield delay(500);
     yield put({
       type: ALL_CONSTANTS.UPDATE_REACTION,
       ...ALL_CONSTANTS.commonInitialState,
@@ -148,9 +145,6 @@ function* updateReactionWorker(params) {
 
 function* deleteReactionWorker(params) {
   try {
-    // when there are multiple clicks are calls made making adelay so that saga can cancel all the previously called workers
-    // as we are using takeLates instead of takeEvery
-    yield delay(500);
     yield put({
       type: ALL_CONSTANTS.DELETE_REACTION,
       ...ALL_CONSTANTS.commonInitialState,
@@ -214,11 +208,11 @@ export function* getContentById() {
 }
 
 export function* updateReaction() {
-  yield takeLatest(ALL_CONSTANTS.UPDATE_REACTION_SAGA, updateReactionWorker);
+  yield takeEvery(ALL_CONSTANTS.UPDATE_REACTION_SAGA, updateReactionWorker);
 }
 
 export function* deleteReaction() {
-  yield takeLatest(ALL_CONSTANTS.DELETE_REACTION_SAGA, deleteReactionWorker);
+  yield takeEvery(ALL_CONSTANTS.DELETE_REACTION_SAGA, deleteReactionWorker);
 }
 
 export function* onUserChange() {

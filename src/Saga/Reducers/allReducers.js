@@ -117,27 +117,33 @@ export function Users(state = initialState, action) {
             ].values.splice(reactionDataIndex, 1);
         }
         message.error(ALL_CONSTANTS.UPDATE_REACTION_FAILED);
-      } else if (action.isSuccess) {
+      }
+      else if (action.isPending) {
+
+          // if no values exist for that particualr reaction create an empty array
+        if (!state.content.payload.data[contentIndex].reactions[reaction_id])
+        state.content.payload.data[contentIndex].reactions[reaction_id] = {
+          values: [],
+        };
+      state.content.payload.data[contentIndex].reactions[
+        reaction_id
+      ].values.push({ ...action.params });
+      } 
+      else if (action.isSuccess) {
         // adding the reaction data to content
         if (action.payload.data.id) {
-          // if there is no values exists for that particualr reaction create an empty array
-          if (!state.content.payload.data[contentIndex].reactions[reaction_id])
-            state.content.payload.data[contentIndex].reactions[reaction_id] = {
-              values: [],
-            };
-          state.content.payload.data[contentIndex].reactions[
-            reaction_id
-          ].values.push({ ...action.payload.data });
+          const reactionDataIndex = _.findIndex(
+            state.content.payload.data[contentIndex].reactions[reaction_id]
+              .values,
+            action.params
+          );
+            if(reactionDataIndex > -1){
+              state.content.payload.data[contentIndex].reactions[
+                reaction_id
+              ].values[reactionDataIndex].id = action.payload.data.id;
+            }
         }
       }
-
-      // If we wish to provide a good user experience by adding the reaction
-      // immediately when the user has clicked and making a call behind to add it
-      // if failed we can remove the added one using the failed block
-      // but this will not work if the user tries to delet the reaction immediately
-      // after added...because to delete a reaction we need an id of the reaction content
-      // so proceeded with adding the reaction after success response
-
       return {
         ...state,
         updateReaction: { ...state.updateReaction, ...action },
@@ -152,14 +158,15 @@ export function Users(state = initialState, action) {
         });
       }
 
-      // Same as update delete will work in vice versa
-      // Success will remove the content
-      // Failed need not do any logic as we are not updating the content immediately after clicking
-      // we are waiting for the response
-
+      // when clicked it will be in pending state
+      // remove the data from the content
+      // if the api gets failed to delet the emoji
+      // push the content data back to the corresponding content values
       if (action.isFailed) {
+        state.content.payload.data[contentIndex].reactions[reaction_id]
+            .values.push(action.params)
         message.error(ALL_CONSTANTS.DELETE_REACTION_FAILED);
-      } else if (action.isSuccess) {
+      } else if (action.isPending) {
         const reactionDataIndex = _.findIndex(
           state.content.payload.data[contentIndex].reactions[reaction_id]
             .values,

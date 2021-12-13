@@ -81,6 +81,10 @@ function Home(props) {
             user_id: users.activeUserID,
           });
           if (reactionData) {
+            // if there is no id present in the content data (add reaction response has not been recieved yet)
+            // we cannot allow del at that moment as delete requires the id of the content
+            // if the server response is faster this will be synchronous like a toggle
+            if(!reactionData.id) return;
             deleteReaction(reactionData);
             return;
           }
